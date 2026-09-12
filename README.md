@@ -2,6 +2,14 @@
 
 A browser-based architectural walkthrough built with React, TypeScript, Vite and React Three Fiber. It is a data-driven reconstruction of the supplied reference board: the model supports first-person exploration, touch controls, a daylight/evening presentation, and a separate architectural inspection view.
 
+**Live demo:** https://interactive-house-inky.vercel.app
+
+## Screenshots
+
+| Landing | First-person walkthrough | Structure inspector |
+| --- | --- | --- |
+| ![Landing screen](docs/screenshots/landing.jpg) | ![Walkthrough view](docs/screenshots/walkthrough.jpg) | ![Structure inspector](docs/screenshots/inspector.jpg) |
+
 ## Run locally
 
 Requirements: Node.js 20 or newer and npm.
