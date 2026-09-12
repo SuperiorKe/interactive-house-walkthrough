@@ -1,5 +1,5 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import type { MutableRefObject } from "react";
 import type { PerspectiveCamera } from "three";
 import { houseSpec } from "../architecture/house";
@@ -17,6 +17,9 @@ export type MobileInputRef = MutableRefObject<MobileInput>;
 type PlayerControllerProps = {
   mobileInput: MobileInputRef;
   onPointerLockStateChange: (locked: boolean) => void;
+  onLocationChange: (location: string) => void;
+  compactControls: boolean;
+  resetToken: number;
 };
 
 const keyBindings: Record<string, "forward" | "backward" | "left" | "right"> = {
@@ -30,7 +33,21 @@ const keyBindings: Record<string, "forward" | "backward" | "left" | "right"> = {
   ArrowRight: "right",
 };
 
-export function PlayerController({ mobileInput, onPointerLockStateChange }: PlayerControllerProps) {
+function describeLocation({ x, y, z }: { x: number; y: number; z: number }) {
+  if (y >= 6.5) return z > 10 ? "Upper floor · rear rooms" : "Upper floor · master suite";
+  if (y >= 3.2) {
+    if (x > 11.8 && z < 5) return "First floor · side balcony";
+    if (z > 16.8) return "First floor · rear balcony";
+    if (x < 5.8 && z < 9.7) return "Stair core";
+    return "First floor";
+  }
+  if (z < 0) return "Front court";
+  if (z > 18) return "Pool terrace";
+  if (x < 5.5 && z > 2.5 && z < 9.5) return "Stair core";
+  return "Ground floor";
+}
+
+export function PlayerController({ mobileInput, onPointerLockStateChange, onLocationChange, compactControls, resetToken }: PlayerControllerProps) {
   const { camera, gl } = useThree();
   const pressed = useRef(new Set<string>());
   const position = useRef({ ...houseSpec.navigation.spawn });
@@ -38,11 +55,19 @@ export function PlayerController({ mobileInput, onPointerLockStateChange }: Play
   const yaw = useRef(Math.PI);
   const pitch = useRef(0);
   const pointerLocked = useRef(false);
+  const lastLocation = useRef("");
+
+  const publishLocation = useCallback(() => {
+    const nextLocation = describeLocation(position.current);
+    if (nextLocation === lastLocation.current) return;
+    lastLocation.current = nextLocation;
+    onLocationChange(nextLocation);
+  }, [onLocationChange]);
 
   useEffect(() => {
     const element = gl.domElement;
     camera.rotation.order = "YXZ";
-    (camera as PerspectiveCamera).fov = 72;
+    (camera as PerspectiveCamera).fov = compactControls ? 76 : 72;
     camera.updateProjectionMatrix();
     camera.position.set(position.current.x, position.current.y + houseSpec.navigation.playerHeight, position.current.z);
     camera.rotation.set(pitch.current, yaw.current, 0);
@@ -79,7 +104,19 @@ export function PlayerController({ mobileInput, onPointerLockStateChange }: Play
       element.removeEventListener("click", requestPointerLock);
       if (document.pointerLockElement === element) document.exitPointerLock();
     };
-  }, [camera, gl, onPointerLockStateChange]);
+  }, [camera, compactControls, gl, onPointerLockStateChange]);
+
+  useEffect(() => {
+    position.current = { ...houseSpec.navigation.spawn };
+    verticalVelocity.current = 0;
+    yaw.current = Math.PI;
+    pitch.current = 0;
+    mobileInput.current = { forward: 0, strafe: 0, lookX: 0, lookY: 0 };
+    camera.position.set(position.current.x, position.current.y + houseSpec.navigation.playerHeight, position.current.z);
+    camera.rotation.set(pitch.current, yaw.current, 0);
+    lastLocation.current = "";
+    publishLocation();
+  }, [camera, mobileInput, publishLocation, resetToken]);
 
   useFrame((_, frameDelta) => {
     const delta = Math.min(frameDelta, 0.05);
@@ -102,7 +139,7 @@ export function PlayerController({ mobileInput, onPointerLockStateChange }: Play
     const forwardZ = -Math.cos(yaw.current);
     const rightX = Math.cos(yaw.current);
     const rightZ = -Math.sin(yaw.current);
-    const travel = houseSpec.navigation.moveSpeed * delta;
+    const travel = houseSpec.navigation.moveSpeed * (compactControls ? 0.9 : 1) * delta;
     const requested = {
       x: position.current.x + (forwardX * normalizedForward + rightX * normalizedStrafe) * travel,
       z: position.current.z + (forwardZ * normalizedForward + rightZ * normalizedStrafe) * travel,
@@ -128,6 +165,7 @@ export function PlayerController({ mobileInput, onPointerLockStateChange }: Play
 
     camera.position.set(position.current.x, position.current.y + houseSpec.navigation.playerHeight, position.current.z);
     camera.rotation.set(pitch.current, yaw.current, 0);
+    publishLocation();
   });
 
   return null;

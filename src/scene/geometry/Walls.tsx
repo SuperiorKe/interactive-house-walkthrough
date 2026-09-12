@@ -49,8 +49,8 @@ function openingInsert(wall: WallSpec, opening: OpeningSpec, debug: boolean) {
   const alongX = Math.abs(vector.x) > Math.abs(vector.z);
   const isGlass = opening.kind === "window" || opening.kind === "sliding-door";
   const thickness = isGlass ? 0.055 : wall.thickness * 0.66;
-  const color = opening.kind === "garage-door" ? "#333a38" : isGlass ? "#789fb0" : "#70482d";
-  const opacity = isGlass ? 0.46 : 1;
+  const color = opening.kind === "garage-door" ? "#333a38" : isGlass ? "#8eb9c5" : "#70482d";
+  const opacity = isGlass ? 0.58 : 1;
 
   return (
     <Block
@@ -59,9 +59,57 @@ function openingInsert(wall: WallSpec, opening: OpeningSpec, debug: boolean) {
       size={alongX ? [opening.width, opening.height, thickness] : [thickness, opening.height, opening.width]}
       color={color}
       opacity={opacity}
+      roughness={isGlass ? 0.07 : 0.62}
+      metalness={isGlass ? 0.08 : 0.08}
+      transmission={isGlass ? 0.16 : 0}
       debug={debug}
     />
   );
+}
+
+function openingPart(wall: WallSpec, opening: OpeningSpec, offset: number, length: number, bottom: number, height: number, id: string, debug: boolean) {
+  const vector = wallVector(wall);
+  const center = pointOnWall(wall, opening.offset + offset + length / 2);
+  const alongX = Math.abs(vector.x) > Math.abs(vector.z);
+  return (
+    <Block
+      key={id}
+      position={[center.x, wall.baseElevation + bottom + height / 2, center.z]}
+      size={alongX ? [length, height, 0.085] : [0.085, height, length]}
+      color="#202927"
+      roughness={0.32}
+      metalness={0.68}
+      debug={debug}
+    />
+  );
+}
+
+function openingFrames(wall: WallSpec, opening: OpeningSpec, debug: boolean) {
+  const frame = 0.065;
+  const parts: ReactNode[] = [
+    openingPart(wall, opening, 0, frame, opening.sillHeight, opening.height, `${opening.id}-frame-left`, debug),
+    openingPart(wall, opening, opening.width - frame, frame, opening.sillHeight, opening.height, `${opening.id}-frame-right`, debug),
+    openingPart(wall, opening, 0, opening.width, opening.sillHeight, frame, `${opening.id}-frame-bottom`, debug),
+    openingPart(wall, opening, 0, opening.width, opening.sillHeight + opening.height - frame, frame, `${opening.id}-frame-top`, debug),
+  ];
+
+  if (opening.kind === "door") {
+    parts.push(
+      openingPart(wall, opening, opening.width * 0.79, 0.035, opening.sillHeight + opening.height * 0.37, 0.44, `${opening.id}-pull`, debug),
+    );
+  } else if (opening.kind === "garage-door") {
+    const slatCount = 7;
+    for (let index = 1; index < slatCount; index += 1) {
+      parts.push(openingPart(wall, opening, frame, opening.width - frame * 2, opening.sillHeight + (opening.height * index) / slatCount, 0.035, `${opening.id}-slat-${index}`, debug));
+    }
+  } else {
+    const divisions = opening.kind === "sliding-door" ? 2 : Math.max(2, Math.round(opening.width / 1.15));
+    for (let index = 1; index < divisions; index += 1) {
+      const offset = (opening.width * index) / divisions - frame / 2;
+      parts.push(openingPart(wall, opening, offset, frame, opening.sillHeight, opening.height, `${opening.id}-mullion-${index}`, debug));
+    }
+  }
+  return parts;
 }
 
 export function Walls({ walls, openings, activeLevel, debug }: WallsProps) {
@@ -91,6 +139,7 @@ export function Walls({ walls, openings, activeLevel, debug }: WallsProps) {
               segments.push(segmentBox(wall, opening.offset, opening.width, headerBottom, headerHeight, color, debug, `${opening.id}-header`));
             }
             segments.push(openingInsert(wall, opening, debug));
+            segments.push(openingFrames(wall, opening, debug));
             cursor = opening.offset + opening.width;
           });
 

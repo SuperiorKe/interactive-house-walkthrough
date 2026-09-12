@@ -39,6 +39,46 @@ This register makes uncertainty explicit. `KNOWN` means the source directly supp
 | R-09 | ASSUMED | A 1.35 m first-floor landing and a shallow 0.60 m second-floor arrival landing bridge the stair runs to adjacent circulation slabs. They overlap terminal treads only enough to remove unsupported seams, without creating an artificial high platform above descending steps. They are inferred blockout connections, not measured slab extents. | Detailed second-floor plan/section. |
 | R-10 | ASSUMED | The second-floor slab opening extends rearward over the stairwell core to the first-floor landing, while retaining the adjacent side circulation strip. This prevents an upper slab from occupying the main vertical circulation volume and keeps the two stair runs traversable as one core. | Detailed building section. |
 | R-11 | ASSUMED | The first-to-second flight is an adjacent return run within the same stair core rather than a second stair occupying the ground-to-first run. A short first-floor hall opening connects the two flights. | Detailed stair plan/section. |
+| R-12 | ESTIMATED | The elevations show dark-framed, repeated-panel glazing. Frames are modelled as slim charcoal perimeter frames with two or more equal panels; this preserves the observed proportions without claiming an unprovided manufacturer system. | Opening schedule or enlarged elevations. |
+| R-13 | ESTIMATED | The rear and upper setback edges visibly use transparent guards with dark top rails. Three short glass-guard runs mark these balcony edges; their exact fixing and end locations remain adjustable. | Enlarged balcony / elevation drawing. |
+| R-14 | ESTIMATED | The stair reference shows timber treads with a closely spaced vertical timber guard. The model adds a single exposed-side vertical guard to each continuous flight, leaving the stairs' supported walking geometry unchanged. | Stair section or balustrade detail. |
+
+## Facade, roof and site articulation
+
+| ID | Status | Decision / evidence | Change trigger |
+| --- | --- | --- | --- |
+| F-01 | KNOWN | The elevations and exterior renders show a palette of light rendered walls, dark stone/brick fields, vertical timber cladding, dark glazing frames and a flat parapet roof. | Superseding finish schedule. |
+| F-02 | ESTIMATED | Timber and stone panels are placed only on opaque wall fields adjacent to the visible openings; their extents follow the elevation rhythm rather than covering glazing with decorative overlays. | Enlarged elevation or material schedule. |
+| F-03 | ESTIMATED | The roof remains a flat slab within a parapet, with a thin coping and a shallow rear overhang corresponding to the roof plan/elevation silhouette. No unseen pitched roof or roof equipment is invented. | Roof section or roof services plan. |
+| F-04 | ESTIMATED | Two low front entry steps and two broad terrace steps establish the level changes visible in the exterior references. They are visual geometry only so existing floor support and collision behavior remain authoritative. | Dimensioned external stair detail. |
+| F-05 | ESTIMATED | The boundary is retained as rendered masonry; the front gate is articulated into a dark vertical-slat pedestrian leaf, a pier, and a timber vehicle leaf, matching the reference's mixed gate language. | Gate elevation / site plan. |
+
+## Interior language and loose furniture
+
+| ID | Status | Decision / evidence | Change trigger |
+| --- | --- | --- | --- |
+| I-01 | KNOWN | The interior references consistently use warm timber cabinetry, pale stone/tile floors, charcoal metal, generous glazing, warm pendant/ambient lighting and neutral upholstered furniture. | Finish schedule or higher-resolution interiors. |
+| I-02 | ESTIMATED | The living room uses a low sofa grouping, occasional chair, timber/stone coffee table and media joinery; the dining table remains behind it. This matches the reference proportions while keeping the ground-floor route clear. | Dimensioned furniture plan. |
+| I-03 | ESTIMATED | The kitchen combines full-height timber cabinetry, a pale stone worktop/backsplash and a compact central island with pendant task lights. | Kitchen elevations or appliance schedule. |
+| I-04 | ESTIMATED | The master and children's rooms use low beds, timber headboards/wardrobes and limited bedside or study joinery. The bathroom uses timber vanity, stone/tile and a glazed shower enclosure; the stair retains its timber treads, vertical guard and a warm circulation light. | Room-by-room interior drawings. |
+| I-05 | ASSUMED | Loose furniture, finish overlays and interior lights are visual modules only. They intentionally generate no collision volumes and are kept away from route waypoints; collision and movement continue to derive only from architectural walls, slabs, stairs and site geometry. | A future interactive furniture/collision requirement. |
+
+## Exterior environment
+
+| ID | Status | Decision / evidence | Change trigger |
+| --- | --- | --- | --- |
+| E-01 | KNOWN | The front, rear and night references show a formal lawn, wide paved drive, low planted boundary beds, a pool terrace and warm low-level exterior lighting. | Dimensioned landscape/site plan. |
+| E-02 | ESTIMATED | The landscape uses four restrained planted beds, four small specimen trees, repeated shrubs and ornamental grasses. Planting stays at garden edges, leaving the driveway, gate path, entry and pool route visually clear. | Landscape drawing or planting schedule. |
+| E-03 | ESTIMATED | The pool is represented as a recessed blue water plane with pale coping and a simple jointed terrace, not an invented resort-style landscape. | Pool detail / landscape plan. |
+| E-04 | ASSUMED | Bollards and one entry wall wash use warm light to reproduce the evening reference. Repeated plants use instanced geometry and the small lights do not cast shadows to protect browser performance. | Lighting plan or performance target change. |
+
+## Presentation lighting
+
+| ID | Status | Decision / evidence | Change trigger |
+| --- | --- | --- | --- |
+| P-01 | KNOWN | The board contains both daylight and evening imagery; the model therefore offers a Day / Evening presentation control rather than treating either reference as the sole lighting condition. | Client lighting brief. |
+| P-02 | ASSUMED | Daylight uses a warm directional sun with soft shadows and cool skylight fill; Evening uses a low cool moon-like directional light, reduced ambient fill and the existing warm architectural/interior fixtures. This changes no architectural geometry or collision behavior. | Lighting plan or calibrated photographic target. |
+| P-03 | ASSUMED | Glass uses low-roughness physical material response and masonry/wood remain rough, matte finishes. Tone mapping and capped device pixel ratio improve consistency without full-screen effects or additional shadow-map lights. | Material schedule or performance target change. |
 
 ## Explicitly deferred choices
 

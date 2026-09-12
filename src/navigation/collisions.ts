@@ -108,6 +108,12 @@ const entryApronSurface: WalkableSurface = {
   height: houseSpec.coordinateSystem.groundElevation,
 };
 
+const terraceSurface: WalkableSurface = {
+  id: "rear-terrace",
+  footprint: houseSpec.site.terrace,
+  height: DIM.construction.slabThickness,
+};
+
 const slabSurfaces: WalkableSurface[] = houseSpec.levels.flatMap((level) =>
   level.slabs.map((slab) => ({
     id: `${level.id}-${slab.id}`,
@@ -139,7 +145,7 @@ function stairHeightAt(position: CirclePosition) {
 
 export function walkableFloorHeight(position: CirclePosition, currentFeetY: number) {
   const maximumReachableHeight = currentFeetY + houseSpec.navigation.maximumStepHeight;
-  const platformHeights = [siteSurface, entryApronSurface, ...slabSurfaces]
+  const platformHeights = [siteSurface, entryApronSurface, terraceSurface, ...slabSurfaces]
     .filter((surface) => insideFootprint(position, surface.footprint))
     .map((surface) => surface.height);
   const candidates = [...platformHeights, ...stairHeightAt(position)]

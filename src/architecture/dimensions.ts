@@ -7,11 +7,17 @@ export const DIM = {
     storeyHeight: 3.6,
     clearWallHeight: 3.2,
     parapetHeight: 0.6,
+    balconyRailHeight: 1.05,
+    exteriorRiser: 0.14,
   },
   house: {
     width: 12,
     depth: 17,
     secondFloor: { x: 2.4, z: 3.2, width: 9.6, depth: 12.5 },
+  },
+  balconies: {
+    firstRear: { x: 0.25, z: 17, width: 5.85, depth: 1.15 },
+    firstRight: { x: 12, z: 0.75, width: 1.15, depth: 3.65 },
   },
   stair: {
     x: 3.55,
@@ -34,7 +40,7 @@ export const DIM = {
     firstFrontWindow: { offset: 1.35, width: 3.2, sill: 0.75, height: 1.85 },
     firstFrontWindowEast: { offset: 7.35, width: 2.8, sill: 0.75, height: 1.85 },
     firstRearWindow: { offset: 1.4, width: 3.3, sill: 0.7, height: 2 },
-    firstRearWindowWest: { offset: 7.1, width: 3.1, sill: 0.7, height: 2 },
+    firstRearWindowWest: { offset: 7.1, width: 3.1, height: 2.55 },
     firstLeftWindow: { offset: 2, width: 2.6, sill: 0.75, height: 1.85 },
     firstRightGlazing: { offset: 1, width: 3.1, height: 2.45 },
     stairArrival: { offset: 0.75, width: 4.4, height: 2.55 },
@@ -54,6 +60,9 @@ export const DIM = {
     gate: { x: 13.4, z: -10, width: 8.8, depth: 0.24 },
     boundaryHeight: 1.6,
     boundaryThickness: 0.24,
+    gateSlattedWidth: 3.15,
+    gateTimberWidth: 4.65,
+    gatePierWidth: 0.34,
   },
   interior: {
     garageWidth: 3.35,
